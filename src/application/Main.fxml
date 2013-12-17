@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<top><ToolBar xmlns:fx="http://javafx.com/fxml">
+  <items>
+    <Button fx:id="newDrawing" mnemonicParsing="false" onAction="#handleNewZeichnung" text="Neue Zeichnung" /><Button mnemonicParsing="false" text="Zeichnung laden" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Button mnemonicParsing="false" text="Zeichnung speichern" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+  </items>
+</ToolBar>
+</top>
+<left><VBox prefHeight="200.0" prefWidth="100.0">
+<children><Label text="Toolbox" /><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Line endX="40.0" />
+</graphic></Button><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Polyline fill="CHARTREUSE" scaleX="0.42" scaleY="0.42" strokeType="INSIDE" xmlns:fx="http://javafx.com/fxml">
+  <points>
+    <Double fx:value="-50.0" />
+    <Double fx:value="-40.0" />
+    <Double fx:value="50.0" />
+    <Double fx:value="-40.0" />
+    <Double fx:value="0.0" />
+    <Double fx:value="60.0" />
+    <Double fx:value="-50.0" />
+    <Double fx:value="-40.0" />
+  </points>
+</Polyline>
+</graphic></Button><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Circle fill="DODGERBLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+</graphic></Button><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Ellipse fill="DODGERBLUE" radiusX="20.0" radiusY="10.0" stroke="BLACK" strokeType="INSIDE" />
+</graphic></Button><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+</graphic></Button><Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+<graphic><Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="40.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</graphic></Button>
+</children></VBox>
+</left>
+<center><Pane fx:id="malPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+<children><Canvas fx:id="malFlaeche" height="200.0" visible="false" width="200.0">
+<cursor>
+<Cursor fx:constant="HAND" />
+</cursor></Canvas>
+</children></Pane>
+</center></BorderPane>

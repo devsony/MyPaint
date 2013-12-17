@@ -1,0 +1,37 @@
+// Load the fxml file and create a new stage for the popup
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("NewZeichnungDialog.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Neue Zeichnung");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			dialogStage.initOwner(dialogStage);
+			Scene scene = new Scene(page);
+
+			dialogStage.setScene(scene);
+			
+			
+			
+			NewZeichnungDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			//controller.setPerson(z);
+			
+			// Show the dialog and wait until the user closes it
+			dialogStage.showAndWait();
+			
+			
+			
+//				FXMLLoader loader = new FXMLLoader(Main.class.getResource("NewZeichnungDialog.fxml"));
+//			 	Stage stage = new Stage();
+//			    Parent root = FXMLLoader.load(Main.class.getResource("NewZeichnungDialog.fxml"));
+//			    stage.setScene(new Scene(root));
+//			    stage.setTitle("Neue Zeichnung");
+//			    stage.initModality(Modality.WINDOW_MODAL);
+//			    stage.initOwner(primaryStage);
+//			    
+//			    NewZeichnungDialogController controller = loader.getController();
+//			    
+//			    //controller.setDialogStage(stage);
+//			    
+//			    stage.showAndWait();
+			
