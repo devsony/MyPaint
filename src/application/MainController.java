@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -32,12 +34,16 @@ public class MainController implements Initializable {
 
 	    }
 	  
-	  @FXML
-	  private Canvas malFlaeche;
+//	  @FXML
+//	  private Canvas malFlaeche;
 	  
 
-	@FXML
-	  private Pane malPane;
+//	@FXML
+//	  private Pane malPane;
+	  
+	  @FXML
+	  private TabPane tabPane;
+	  
 	  
 		/**
 		 * Called when the user clicks the new button.
@@ -52,32 +58,26 @@ public class MainController implements Initializable {
 			if (okClicked) {
 				
 				System.out.println("OK Clicked!");
-				
-				System.out.println("Breite:" + tempZeichnung.getBreite());
-				
+							
 				tempZeichnung = NewZeichnungDialogController.GetZeichnung();
+		
 				
-				System.out.println("Breite:" + tempZeichnung.getBreite());
+				Tab tab = new Tab();
+				 tab.setText(tempZeichnung.getKurzBeschr());
+				 //tab.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
+				
+				Canvas canvas = new Canvas(tempZeichnung.getBreite(),tempZeichnung.getHoehe());
+				
+				//canvas.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
+				
+				
+				Pane drawPane = new Pane();
+				drawPane.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
+				drawPane.setPrefSize(tempZeichnung.getBreite(), tempZeichnung.getHoehe());
+				drawPane.setMaxSize(tempZeichnung.getBreite(), tempZeichnung.getHoehe());
+				drawPane.getChildren().addAll(canvas);
 								
-				malFlaeche.setWidth(tempZeichnung.getBreite());
-				System.out.println("Breite:" + tempZeichnung.getBreite());
-				malFlaeche.setHeight(tempZeichnung.getHoehe());
-				System.out.println("Höhe:" + tempZeichnung.getHoehe());
-				//malFlaeche.setStyle("-fx-border-color: blue;");
 				
-				malPane.setPrefWidth(tempZeichnung.getBreite());
-				malPane.setPrefHeight(tempZeichnung.getBreite());
-				
-				malPane.setMaxHeight(tempZeichnung.getBreite());
-				malPane.setMaxWidth(tempZeichnung.getBreite());
-				
-				malPane.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
-
-				malPane.setVisible(true);
-				
-				malFlaeche.setVisible(true);
-				
-				Canvas canvas = new Canvas(800,600);
 				final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 				
 				 initDraw(graphicsContext);
@@ -113,7 +113,16 @@ public class MainController implements Initializable {
 			        });
 				
 				
-				
+			        tab.setContent(
+							 
+			        		drawPane
+							 
+							 );
+					 
+					 tab.isClosable();
+					 tabPane.getTabs().add(tab);
+					 
+					
 			}
 		}
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
@@ -41,10 +39,6 @@
 </graphic></Button>
 </children></VBox>
 </left>
-<center><Pane fx:id="malPane" prefHeight="200.0" prefWidth="200.0" visible="false">
-<children><Canvas fx:id="malFlaeche" height="200.0" visible="false" width="200.0">
-<cursor>
-<Cursor fx:constant="HAND" />
-</cursor></Canvas>
-</children></Pane>
+<center><TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" xmlns:fx="http://javafx.com/fxml">
+</TabPane>
 </center></BorderPane>
