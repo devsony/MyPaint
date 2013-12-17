@@ -33,7 +33,7 @@ public class MainController implements Initializable {
 	    }
 	  
 	  @FXML
-	  private static Canvas malFlaeche;
+	  private Canvas malFlaeche;
 	  
 
 	@FXML
@@ -55,13 +55,7 @@ public class MainController implements Initializable {
 				
 				System.out.println("Breite:" + tempZeichnung.getBreite());
 				
-				//tempZeichnung = NewZeichnungDialogController.GetZeichnung();
-				
-				tempZeichnung.setBreite(800);
-				tempZeichnung.setHoehe(600);
-				tempZeichnung.setAutor("JH");
-				tempZeichnung.setKurzBeschr("test");
-				tempZeichnung.setDatum("17.12.2013");
+				tempZeichnung = NewZeichnungDialogController.GetZeichnung();
 				
 				System.out.println("Breite:" + tempZeichnung.getBreite());
 								
@@ -83,7 +77,7 @@ public class MainController implements Initializable {
 				
 				malFlaeche.setVisible(true);
 				
-				Canvas canvas = MainController.malFlaeche;
+				Canvas canvas = new Canvas(800,600);
 				final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 				
 				 initDraw(graphicsContext);
