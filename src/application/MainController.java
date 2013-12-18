@@ -1,7 +1,12 @@
 package application;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,12 +25,57 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class MainController implements Initializable {
 	
+	//Path path;
+	
+	double x1;
+	double y1;
+	
+	double x2;
+	double y2;
+	
+	/*
+	 * 
+	 * Auswahl an Geometrischen Formen
+	 * 
+	 * 0 = leer
+	 * 1 = Linie
+	 * 2 = PolyLinie
+	 * 3 = Kreis
+	 * 4 = Ellipse
+	 * 5 = Quadrat
+	 * 6 = Rechteck
+	 */
+	
+	int form = 0;
+	
+	
+//	EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+//
+//	    @Override
+//	    public void handle(MouseEvent mouseEvent) {
+//	      if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
+//	        path.getElements().clear();
+//	        path.getElements()
+//	            .add(new MoveTo(mouseEvent.getX(), mouseEvent.getY()));
+//	      } else if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+//	        path.getElements()
+//	            .add(new LineTo(mouseEvent.getX(), mouseEvent.getY()));
+//	      }
+//
+//	    }
+//
+//	  };
 	
 
 	  @Override // This method is called by the FXMLLoader when initialization is complete
@@ -44,6 +94,103 @@ public class MainController implements Initializable {
 	  @FXML
 	  private TabPane tabPane;
 	  
+		@FXML
+		private void handleNewLine() {
+			System.out.println("handleNewLine Handle");
+			
+			form = 1;
+			
+		}
+		
+		@FXML
+		private void handleNewPolyLine() {
+			System.out.println("handleNewPolyLine Handle");
+			
+			form = 2;
+		}
+		
+		@FXML
+		private void handleNewCircle() {
+			System.out.println("handleNewCircle Handle");
+			
+			form = 3;
+		}
+		
+		@FXML
+		private void handleNewEllipse() {
+			System.out.println("handleNewEllipse Handle");
+			
+			form = 4;
+		}
+	  
+		@FXML
+		private void handleNewSquare() {
+			System.out.println("handleNewSquare Handle");
+			
+			form = 5;
+		}
+		
+		@FXML
+		private void handleNewrectangle() {
+			System.out.println("handleNewrectangle Handle");
+			
+			form = 6;
+		}
+		
+		@FXML
+		private void handleLoadZeichnung() {
+			
+			System.out.println("handleLoadZeichnung Handle");
+			
+			  FileChooser fileChooser = new FileChooser();
+			  
+              //Set extension filter
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+              fileChooser.getExtensionFilters().add(extFilter);
+             
+              //Show open file dialog
+              fileChooser.showOpenDialog(null);
+             
+              
+			
+		}
+		
+	  
+		@FXML
+		private void handleSaveZeichnung() {
+			System.out.println("handleSaveZeichnung Handle");
+			
+			 FileChooser fileChooser = new FileChooser();
+			  
+             //Set extension filter
+             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+             fileChooser.getExtensionFilters().add(extFilter);
+             
+             //Show save file dialog
+             File file = fileChooser.showSaveDialog(Main.getPrimaryStage());
+             
+             
+             
+             if(file != null){
+                 SaveFile("canvas as JSON", file);
+             }
+			
+		}
+             
+
+             private void SaveFile(String content, File file){
+                 try {
+                     FileWriter fileWriter = null;
+                      
+                     fileWriter = new FileWriter(file);
+                     fileWriter.write(content);
+                     fileWriter.close();
+                 } catch (IOException ex) {
+                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                  
+             }
+		
 	  
 		/**
 		 * Called when the user clicks the new button.
@@ -81,15 +228,22 @@ public class MainController implements Initializable {
 				final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 				
 				 initDraw(graphicsContext);
+				 			
 		         
 			        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
 			                new EventHandler<MouseEvent>(){
 			 
 			            @Override
 			            public void handle(MouseEvent event) {
-			                graphicsContext.beginPath();
-			                graphicsContext.moveTo(event.getX(), event.getY());
-			                graphicsContext.stroke();
+			            	
+			            	
+			            	x1 = event.getX();
+			            	
+			            	y1 = event.getY();
+			            	
+//			                graphicsContext.beginPath();
+//			                graphicsContext.moveTo(event.getX(), event.getY());
+//			                graphicsContext.stroke();
 			            }
 			        });
 			         
@@ -98,8 +252,8 @@ public class MainController implements Initializable {
 			 
 			            @Override
 			            public void handle(MouseEvent event) {
-			                graphicsContext.lineTo(event.getX(), event.getY());
-			                graphicsContext.stroke();
+//			                graphicsContext.lineTo(event.getX(), event.getY());
+//			                graphicsContext.stroke();
 			            }
 			        });
 			 
@@ -108,6 +262,60 @@ public class MainController implements Initializable {
 			 
 			            @Override
 			            public void handle(MouseEvent event) {
+			            	
+			            	x2 = event.getX();
+			            	
+			            	y2 = event.getY();
+			            	
+			            	
+			            	System.out.println("wert von form: " + form);
+			            	
+			            	switch(form){
+			            	 case 0: 
+			                     System.out.println("noch keine Auswahl getroffen"); 
+			                     break; 
+			                 case 1: 
+			                     System.out.println("Male eine Linie");
+			                     
+			                     graphicsContext.strokeLine(x1, y1, x2, y2);
+			                     
+								
+			                     
+			                     break; 
+			                 case 2: 
+			                     System.out.println("Male eine PolyLinie"); 
+			                     break; 
+			                 case 3: 
+			                     System.out.println("Male ein Kreis"); 
+			                     
+			                     graphicsContext.strokeOval(x1, y1, x2-x1, y2-y1);
+			                     
+			                     
+			                     
+			                     break; 
+			                 case 4: 
+			                     System.out.println("Male ein Ellipse"); 
+			                     
+			                     graphicsContext.strokeOval(x1, y1, (x2-x1)-10, (y2-y1)-10);
+			                     
+			                     break; 
+			                 case 5: 
+			                     System.out.println("Male ein Quadrat");
+			                     
+			                     graphicsContext.strokeRect(x1, y1, x2-x1, x2-x1);
+			                     
+			                     break; 
+			                 case 6: 
+			                     System.out.println("Male ein Rechteck");
+			                     
+			                     graphicsContext.strokeRect(x1, y1, x2-x1, y2-y1);
+			                     
+			                     break; 
+			                 default: 
+			                     System.out.println("i liegt nicht zwischen null und drei"); 
+			            	}
+			            	
+			            	
 			 
 			            }
 			        });
@@ -128,23 +336,12 @@ public class MainController implements Initializable {
 
 		private void initDraw(GraphicsContext gc) {
 			
-			 double canvasWidth = gc.getCanvas().getWidth();
-		        double canvasHeight = gc.getCanvas().getHeight();
-		         
-		        gc.setFill(Color.LIGHTGRAY);
-		        gc.setStroke(Color.BLACK);
-		        gc.setLineWidth(5);
-		 
-		        gc.fill();
-		        gc.strokeRect(
-		                0,              //x of the upper left corner
-		                0,              //y of the upper left corner
-		                canvasWidth,    //width of the rectangle
-		                canvasHeight);  //height of the rectangle
-		         
-		        gc.setFill(Color.RED);
+			// Setzen von Pinsel Farbe
 		        gc.setStroke(Color.BLUE);
+		        
+			// Setzen von Pinsel Stärke
 		        gc.setLineWidth(1);
+		        
 			
 		}
 }

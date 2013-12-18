@@ -19,7 +19,8 @@ public class Main extends Application {
 	
 	private static Stage primaryStage;
 	
-	
+
+
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -48,7 +49,7 @@ public class Main extends Application {
 	 * Returns the main stage.
 	 * @return
 	 */
-	public Stage getPrimaryStage() {
+	public static Stage getPrimaryStage() {
 		return primaryStage;
 	}
 	
