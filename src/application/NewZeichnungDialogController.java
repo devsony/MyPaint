@@ -3,6 +3,9 @@ package application;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 
+import com.sun.prism.paint.Stop;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -56,6 +59,8 @@ public class NewZeichnungDialogController {
 	  public boolean isOkClicked() {
 	      return okClicked;
 	  }
+	  
+
 	  
 	  /**
 	  * Called when the user clicks ok.

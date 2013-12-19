@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,6 +9,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -21,18 +26,28 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.CircleBuilder;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.EllipseBuilder;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineBuilder;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.google.gson.*;
 
 public class MainController implements Initializable {
 	
@@ -43,6 +58,10 @@ public class MainController implements Initializable {
 	
 	double x2;
 	double y2;
+	
+	Canvas canvas;
+	
+	Zeichnung z;
 	
 	/*
 	 * 
@@ -92,6 +111,9 @@ public class MainController implements Initializable {
 //	  private Pane malPane;
 	  
 	  @FXML
+	  private TextField txtPinselStaerke;
+	  
+	  @FXML
 	  private TabPane tabPane;
 	  
 		@FXML
@@ -137,6 +159,12 @@ public class MainController implements Initializable {
 			form = 6;
 		}
 		
+		  @FXML
+		  private void handleExit() {
+			  Platform.exit();
+		  }
+		  
+		
 		@FXML
 		private void handleLoadZeichnung() {
 			
@@ -169,29 +197,79 @@ public class MainController implements Initializable {
              //Show save file dialog
              File file = fileChooser.showSaveDialog(Main.getPrimaryStage());
              
+             //Zeichnung to JSON
+             Gson gson = new Gson();
+             String jsonZeichnung = gson.toJson(z);
              
+             System.out.println(jsonZeichnung);
+
+           if(file != null){
+           //	SavePNGFile(file);
+        	   SaveFile(jsonZeichnung, file);
+       }
+		
+           
              
-             if(file != null){
-                 SaveFile("canvas as JSON", file);
-             }
+//             if(file != null){
+//                 SaveFile(jsonCanvas, file);
+//             }
 			
 		}
+		
+
+		  private void SaveFile(String jsonZeichnung, File file) {
+				
+			  FileWriter fileWriter = null;
+		        try {
+		            fileWriter = new FileWriter(file);
+		            fileWriter.write(jsonZeichnung);
+		            fileWriter.close();
+		        } catch (IOException ex) {
+		            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+		        } finally {
+		            try {
+		                fileWriter.close();
+		            } catch (IOException ex) {
+		                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+		            }
+		        }
+				
+			}
              
 
-             private void SaveFile(String content, File file){
-                 try {
-                     FileWriter fileWriter = null;
-                      
-                     fileWriter = new FileWriter(file);
-                     fileWriter.write(content);
-                     fileWriter.close();
-                 } catch (IOException ex) {
-                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-                  
-             }
+//             private void SavePNGFile(File file){
+//            	  if(file != null){
+//                      try {
+//                    	  
+//                    	  int cW = (int) (canvas.getWidth());
+//                    	  int cH = (int) (canvas.getHeight());
+//                    	  
+//                          WritableImage writableImage = new WritableImage(cW, cH);
+//                          canvas.snapshot(null, writableImage);
+//                          RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+//                          ImageIO.write(renderedImage, "png", file);
+//                      } catch (IOException ex) {
+//                          Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+//                      }
+//                  }
+//             }
 		
-	  
+
+
+	private int pinselStaerke()
+	  {
+		  try
+		  {
+			  return Integer.parseInt(txtPinselStaerke.getText());
+		  }
+		  catch (Exception ex)
+		  {
+			  txtPinselStaerke.setText("2");
+			  return 2;
+		  }
+	  }
+             
+             
 		/**
 		 * Called when the user clicks the new button.
 		 */
@@ -200,37 +278,40 @@ public class MainController implements Initializable {
 			
 			System.out.println("handleNewZeichnung erreicht!");
 			
-			Zeichnung tempZeichnung = new Zeichnung();
-			boolean okClicked = Main.showNewZeichnungDialog(tempZeichnung);
+			z = new Zeichnung();
+			boolean okClicked = Main.showNewZeichnungDialog(z);
 			if (okClicked) {
 				
 				System.out.println("OK Clicked!");
 							
-				tempZeichnung = NewZeichnungDialogController.GetZeichnung();
+				z = NewZeichnungDialogController.GetZeichnung();
 		
 				
 				Tab tab = new Tab();
-				 tab.setText(tempZeichnung.getKurzBeschr());
+				 tab.setText(z.getKurzBeschr());
+				 
+				 
 				 //tab.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
 				
-				Canvas canvas = new Canvas(tempZeichnung.getBreite(),tempZeichnung.getHoehe());
+				canvas = new Canvas(z.getBreite(),z.getHoehe());
 				
 				//canvas.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
 				
 				
-				Pane drawPane = new Pane();
+				final Pane drawPane = new Pane();
 				drawPane.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: black;");
-				drawPane.setPrefSize(tempZeichnung.getBreite(), tempZeichnung.getHoehe());
-				drawPane.setMaxSize(tempZeichnung.getBreite(), tempZeichnung.getHoehe());
-				drawPane.getChildren().addAll(canvas);
+				drawPane.setPrefSize(z.getBreite(), z.getHoehe());
+				drawPane.setMaxSize(z.getBreite(), z.getHoehe());
+				
+				//drawPane.getChildren().addAll(canvas);
 								
 				
-				final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+				//final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 				
-				 initDraw(graphicsContext);
+				//initDraw(graphicsContext);
 				 			
 		         
-			        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+				drawPane.addEventHandler(MouseEvent.MOUSE_PRESSED,
 			                new EventHandler<MouseEvent>(){
 			 
 			            @Override
@@ -247,7 +328,7 @@ public class MainController implements Initializable {
 			            }
 			        });
 			         
-			        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+				drawPane.addEventHandler(MouseEvent.MOUSE_DRAGGED,
 			                new EventHandler<MouseEvent>(){
 			 
 			            @Override
@@ -257,7 +338,7 @@ public class MainController implements Initializable {
 			            }
 			        });
 			 
-			        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+				drawPane.addEventHandler(MouseEvent.MOUSE_RELEASED,
 			                new EventHandler<MouseEvent>(){
 			 
 			            @Override
@@ -277,9 +358,23 @@ public class MainController implements Initializable {
 			                 case 1: 
 			                     System.out.println("Male eine Linie");
 			                     
-			                     graphicsContext.strokeLine(x1, y1, x2, y2);
+			                     Line line = new Line();
+			                     	line.setStartX(x1);
+			                     	line.setStartY(y1);
+			                     	line.setEndX(x2);
+			                     	line.setEndY(y2);
+			                     	line.setStrokeWidth(pinselStaerke());
 			                     
-								
+			                     
+			                     	drawPane.getChildren().add(line);
+			                     
+			                     	// Linie in die Shape Collection der Zeichnung aufnehmen
+			                     	z.addShape(line);
+			                     	
+			                     //graphicsContext.strokeLine(x1, y1, x2, y2);
+			                     
+			                    
+			                     
 			                     
 			                     break; 
 			                 case 2: 
@@ -288,27 +383,132 @@ public class MainController implements Initializable {
 			                 case 3: 
 			                     System.out.println("Male ein Kreis"); 
 			                     
-			                     graphicsContext.strokeOval(x1, y1, x2-x1, y2-y1);
+			                     //graphicsContext.strokeOval(x1, y1, x2-x1, y2-y1);
 			                     
+			                     double rad = 0;
 			                     
+			                     if(x2-x1 > 0)
+			                    	 rad = x2-x1;
+			                     else
+			                    	 rad = x1-x2;
+
+			                     	Circle circle = new Circle(x1,y1,rad,Color.TRANSPARENT);
+			                        circle.setStrokeWidth(pinselStaerke());
+			                        circle.setStroke(Color.BLACK);
+			                        
+			                     
+			                     	drawPane.getChildren().add(circle);
+			                     	
+			                     	// Kreis in die Shape Collection der Zeichnung aufnehmen
+			                     	z.addShape(circle);
 			                     
 			                     break; 
 			                 case 4: 
 			                     System.out.println("Male ein Ellipse"); 
 			                     
-			                     graphicsContext.strokeOval(x1, y1, (x2-x1)-10, (y2-y1)-10);
+			                     //graphicsContext.strokeOval(x1, y1, (x2-x1)-10, (y2-y1)-10);
+			                     
+//			                     Ellipse ellipse = EllipseBuilder.create()
+//			                             .centerX(x1)
+//			                             .centerY(y1)
+//			                             .radiusX(x2-x1)
+//			                             .radiusY(y2-y1)
+//			                             .strokeWidth(3)
+//			                             .stroke(Color.BLACK)
+//			                             .fill(Color.WHITE)
+//			                             .build();
+			                     
+			                     double xrad = 0;
+			                     
+			                     if(x2-x1 > 0)
+			                    	 xrad = x2-x1;
+			                     else
+			                    	 xrad = x1-x2;
+			                     
+			                     double yrad = 0;
+			                     
+			                     if(y2-y1 > 0)
+			                    	 yrad = y2-y1;
+			                     else
+			                    	 yrad = y1-y2;
+			                     
+			                     Ellipse ellipse = new Ellipse(x1,y1,xrad,yrad);
+			                     ellipse.setStrokeWidth(pinselStaerke());
+			                     ellipse.setStroke(Color.BLACK);
+			                     ellipse.setFill(Color.TRANSPARENT);
+			                     drawPane.getChildren().add(ellipse);
+			                     
+			                     ellipse.setId("meineEllipse");
+			                     
+			                     System.out.println("eillipse id: " + ellipse.getId());
+			                     
+			                     	// Ellipse in die Shape Collection der Zeichnung aufnehmen
+			                     	z.addShape(ellipse);
 			                     
 			                     break; 
 			                 case 5: 
 			                     System.out.println("Male ein Quadrat");
 			                     
-			                     graphicsContext.strokeRect(x1, y1, x2-x1, x2-x1);
+			                     //graphicsContext.strokeRect(x1, y1, x2-x1, x2-x1);
+			                     
+			                     double sW = 0;
+			                     
+			                     if(x2-x1 > 0)
+			                    	 sW = x2-x1;
+			                     else
+			                    	 sW = x1-x2;
+			                     
+			                     double sH = 0;
+			                     
+			                     if(y2-y1 > 0)
+			                    	 sH = y2-y1;
+			                     else
+			                    	 sH = y1-y2;
+			                     
+			                     Rectangle quadrat = new Rectangle();
+			                     quadrat.setX(x1);
+			                     quadrat.setY(y1);
+			                     quadrat.setWidth(sW);
+			                     quadrat.setHeight(sH);
+			                     quadrat.setStrokeWidth(pinselStaerke());
+			                     quadrat.setStroke(Color.BLACK);
+			                     quadrat.setFill(Color.TRANSPARENT);
+			                     drawPane.getChildren().add(quadrat);
+			                     
+			                     	// Quadrat in die Shape Collection der Zeichnung aufnehmen
+			                     	z.addShape(quadrat);
 			                     
 			                     break; 
 			                 case 6: 
 			                     System.out.println("Male ein Rechteck");
 			                     
-			                     graphicsContext.strokeRect(x1, y1, x2-x1, y2-y1);
+			                     //graphicsContext.strokeRect(x1, y1, x2-x1, y2-y1);
+			                     double sWr = 0;
+			                     
+			                     if(x2-x1 > 0)
+			                    	 sWr = x2-x1;
+			                     else
+			                    	 sWr = x1-x2;
+			                     
+			                     double sHr = 0;
+			                     
+			                     if(y2-y1 > 0)
+			                    	 sHr = y2-y1;
+			                     else
+			                    	 sHr = y1-y2;
+			                     
+			                     Rectangle rechteck = new Rectangle();
+			                     rechteck.setX(x1);
+			                     rechteck.setY(y1);
+			                     rechteck.setWidth(sWr);
+			                     rechteck.setHeight(sHr);
+			                     rechteck.setStrokeWidth(pinselStaerke());
+			                     rechteck.setStroke(Color.BLACK);
+			                     rechteck.setFill(Color.TRANSPARENT);
+			                     drawPane.getChildren().add(rechteck);
+			                     
+			                     	// Rechteck in die Shape Collection der Zeichnung aufnehmen
+			                     	z.addShape(rechteck);
 			                     
 			                     break; 
 			                 default: 
@@ -334,14 +534,14 @@ public class MainController implements Initializable {
 			}
 		}
 
-		private void initDraw(GraphicsContext gc) {
-			
-			// Setzen von Pinsel Farbe
-		        gc.setStroke(Color.BLUE);
-		        
-			// Setzen von Pinsel Stärke
-		        gc.setLineWidth(1);
-		        
-			
-		}
+//		private void initDraw(GraphicsContext gc) {
+//			
+//			// Setzen von Pinsel Farbe
+//		        gc.setStroke(Color.BLUE);
+//		        
+//			// Setzen von Pinsel Stärke
+//		        gc.setLineWidth(1);
+//		        
+//			
+//		}
 }

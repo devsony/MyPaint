@@ -8,7 +8,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
 <top><ToolBar xmlns:fx="http://javafx.com/fxml">
   <items>
-    <Button fx:id="newDrawing" mnemonicParsing="false" onAction="#handleNewZeichnung" text="Neue Zeichnung" /><Button mnemonicParsing="false" onAction="#handleLoadZeichnung" text="Zeichnung laden" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Button mnemonicParsing="false" onAction="#handleSaveZeichnung" text="Zeichnung speichern" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+    <Button fx:id="newDrawing" mnemonicParsing="false" onAction="#handleNewZeichnung" text="Neue Zeichnung" /><Button mnemonicParsing="false" onAction="#handleLoadZeichnung" text="Zeichnung laden" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Button mnemonicParsing="false" onAction="#handleSaveZeichnung" text="Zeichnung speichern" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Label text="Pinselstärke: " /><TextField fx:id="txtPinselStaerke" prefHeight="25.0" prefWidth="59.0" text="2" /><Button mnemonicParsing="false" onAction="#handleExit" text="Programm beenden" />
   </items>
 </ToolBar>
 </top>

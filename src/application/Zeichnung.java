@@ -1,6 +1,8 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Zeichnung {
 
@@ -9,7 +11,14 @@ public class Zeichnung {
 	   private String autor;
 	   private String datum;
 	   private String kurzBeschr;
+	   List<javafx.scene.shape.Shape> list = new ArrayList<javafx.scene.shape.Shape>();
 	   
+	   public void addShape(javafx.scene.shape.Shape s)
+	   {
+		   list.add(s);
+	   }
+	   
+
 	   public void setHoehe(int value) {
 	      this.hoehe = value;
 	   }
