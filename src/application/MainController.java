@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -63,6 +66,8 @@ public class MainController implements Initializable {
 	
 	Zeichnung z;
 	
+	Line line;
+	
 	/*
 	 * 
 	 * Auswahl an Geometrischen Formen
@@ -109,6 +114,66 @@ public class MainController implements Initializable {
 
 //	@FXML
 //	  private Pane malPane;
+	  
+	  @FXML
+	  private void handleRotate() {
+		  System.out.println("handleRotate Handle");
+		  
+          String response = Dialogs.create()
+        	      .title("Bitte Winkel nennen")
+        	      .message("Winkel (in Grad): ")
+        		  .showTextInput()
+          			;
+          
+          double winkel = 0;
+          
+          try
+          {
+        	  
+        	  
+        	  winkel = Double.parseDouble(response);
+        	  
+          }
+          catch (Exception ex)
+          {
+        	  Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+          }
+          
+		  
+		  line.setRotate(winkel);
+		  
+	  }
+	  
+	  @FXML
+	  private void handleScale() {
+		  System.out.println("handleScale Handle");
+		  
+		  String response = Dialogs.create()
+        	      .title("Bitte Faktor der Vergrößerung nennen")
+        	      .message("Faktor der Vergrößerung: ")
+        		  .showTextInput()
+          			;
+          
+          double zoom = 0;
+          
+          try
+          {
+        	  
+        	  
+        	  zoom = Double.parseDouble(response);
+        	  
+          }
+          catch (Exception ex)
+          {
+        	  Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+          }
+          
+		  
+		  
+		  line.setScaleX(line.getScaleX() * zoom);
+		  line.setScaleY(line.getScaleY() * zoom);
+		  
+	  }
 	  
 	  @FXML
 	  private TextField txtPinselStaerke;
@@ -358,7 +423,7 @@ public class MainController implements Initializable {
 			                 case 1: 
 			                     System.out.println("Male eine Linie");
 			                     
-			                     Line line = new Line();
+			                     line = new Line();
 			                     	line.setStartX(x1);
 			                     	line.setStartY(y1);
 			                     	line.setEndX(x2);
